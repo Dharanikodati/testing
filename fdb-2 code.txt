@@ -1,0 +1,98 @@
+import mysql.connector
+
+# establish database connection
+db = mysql.connector.connect(
+  host="localhost",
+  user="username",
+  password="password",
+  database="database_name"
+)
+
+# create a cursor object
+cursor = db.cursor()
+
+# function to display data from a table
+def display_table(table_name):
+    query = "SELECT * FROM {}".format(table_name)
+    cursor.execute(query)
+    result = cursor.fetchall()
+    for row in result:
+        print(row)
+
+# function to insert data into the student table
+def insert_student():
+    name = input("Enter student name: ")
+    age = input("Enter student age: ")
+    gender = input("Enter student gender: ")
+    query = "INSERT INTO student (name, age, gender) VALUES (%s, %s, %s)"
+    values = (name, age, gender)
+    cursor.execute(query, values)
+    db.commit()
+    print("Student record inserted successfully.")
+
+# function to modify the advisor of a given student
+def modify_advisor():
+    student_id = input("Enter student ID: ")
+    # get current advisor of the student
+    query = "SELECT advisor_id FROM student WHERE id=%s"
+    values = (student_id,)
+    cursor.execute(query, values)
+    result = cursor.fetchone()
+    current_advisor = result[0] if result else None
+    print("Current advisor ID: ", current_advisor)
+    # get the list of available instructors
+    query = "SELECT * FROM instructor"
+    cursor.execute(query)
+    instructors = cursor.fetchall()
+    print("Available instructors:")
+    for instructor in instructors:
+        print(instructor)
+    # display the list of students
+    display_table("student")
+    # ask the user to select student and instructor
+    selected_student = input("Enter student ID to assign advisor: ")
+    selected_instructor = input("Enter instructor ID: ")
+    # update the advisor of the selected student
+    query = "UPDATE student SET advisor_id=%s WHERE id=%s"
+    values = (selected_instructor, selected_student)
+    cursor.execute(query, values)
+    db.commit()
+    print("Advisor assigned successfully.")
+
+# function to delete a student from the student table
+def delete_student():
+    student_id = input("Enter student ID to delete: ")
+    # display the information of the student
+    query = "SELECT * FROM student WHERE id=%s"
+    values = (student_id,)
+    cursor.execute(query, values)
+    result = cursor.fetchone()
+    if not result:
+        print("Student not found.")
+        return
+    print("Student information:")
+    print(result)
+    confirm = input("Are you sure? (y/n)")
+    if confirm.lower() == "y":
+        # delete the student
+        query = "DELETE FROM student WHERE id=%s"
+        cursor.execute(query, values)
+        db.commit()
+        print("Student deleted successfully.")
+    else:
+        print("Deletion cancelled.")
+
+# main menu
+while True:
+    print("\nMain Menu")
+    print("1. Display Instructor table")
+    print("2. Display Advisor table")
+    print("3. Display Student table")
+    print("4. Insert student record")
+    print("5. Modify student advisor")
+    print("6. Delete student record")
+    print("7. Exit")
+
+    choice = input("Enter your choice: ")
+
+    if choice == "

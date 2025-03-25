@@ -1,0 +1,15 @@
+FDB MID TOPICS:
+
+past papers
+
+ER diagram
+Relatonal schemas ask to write queries
+Relational alzebra for given statements SQL(sequals)
+Set Operations
+Normalization forms theory
+
+Chapter-1,2-Imp
+chapter-3,4-Imp
+Joining tables
+
+2 questions
